@@ -9,3 +9,11 @@ func mergeMap(map1 map[string]bool, map2 map[string]bool) map[string]bool {
 	}
 	return combinedMap
 }
+
+func MapToArray(m map[string]bool) []string {
+	array := []string{}
+	for key := range m {
+		array = append(array, key)
+	}
+	return array
+}

@@ -1,9 +1,10 @@
 package controller
 
 type Request struct {
-	Student  string `json:"student,omitempty"`
-	Students string `json:"students,omitempty"`
-	Teacher  string `json:"teacher,omitempty"`
+	Student      string `json:"student,omitempty"`
+	Students     string `json:"students,omitempty"`
+	Teacher      string `json:"teacher,omitempty"`
+	Notification string `json:"notification,omitempty"`
 }
 
 type Response struct {

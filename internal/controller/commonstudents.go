@@ -27,6 +27,9 @@ func CommonStudentHandler(c *gin.Context, database *db.Database) {
 		if result := database.DB.First(&teacherSchema, "teacher=?", teacher); result.Error != nil {
 			c.JSON(http.StatusBadRequest, NewErrorResponse("Database error; cannot fetch data"))
 			return
+		} else if teacherSchema.Teacher == "" {
+			c.JSON(http.StatusBadRequest, NewErrorResponse("Teacher does not exist"))
+			return
 		}
 
 		students := teacherSchema.Students

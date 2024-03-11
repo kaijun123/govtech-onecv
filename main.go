@@ -50,6 +50,7 @@ func main() {
 
 		// POST /api/retrievefornotifications
 		api.POST("/retrievefornotifications", func(c *gin.Context) {
+			controller.NotificationHandler(c, database)
 		})
 	}
 
