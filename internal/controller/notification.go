@@ -63,7 +63,7 @@ func NotificationHandler(c *gin.Context, database *db.Database) {
 				// Do not add if the student does not exist
 				var studentSchema db.StudentSchema
 				if result := database.DB.Find(&studentSchema, "student=?", trimmedWord); result.Error != nil {
-					c.JSON(http.StatusBadRequest, NewErrorResponse("Database error; cannot fetch data"))
+					c.JSON(http.StatusInternalServerError, NewErrorResponse("Database error; cannot fetch data"))
 					return
 				} else if studentSchema.Student != "" && !studentSchema.Suspend {
 					// student exists and is not suspended, add to map

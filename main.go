@@ -35,7 +35,7 @@ func main() {
 
 		// POST /api/register
 		api.POST("/register", func(c *gin.Context) {
-
+			controller.RegisterStudentHandler(c, database)
 		})
 
 		// GET /api/commonstudents

@@ -2,7 +2,6 @@ package controller
 
 import (
 	"govtech-onecv/internal/db"
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -25,7 +24,7 @@ func CommonStudentHandler(c *gin.Context, database *db.Database) {
 
 		var teacherSchema db.TeacherSchema
 		if result := database.DB.First(&teacherSchema, "teacher=?", teacher); result.Error != nil {
-			c.JSON(http.StatusBadRequest, NewErrorResponse("Database error; cannot fetch data"))
+			c.JSON(http.StatusInternalServerError, NewErrorResponse("Database error; cannot fetch data"))
 			return
 		} else if teacherSchema.Teacher == "" {
 			c.JSON(http.StatusBadRequest, NewErrorResponse("Teacher does not exist"))
@@ -52,6 +51,6 @@ func CommonStudentHandler(c *gin.Context, database *db.Database) {
 		}
 	}
 
-	log.Println(commonStudents)
+	// log.Println(commonStudents)
 	c.JSON(http.StatusOK, Response{Students: commonStudents})
 }
