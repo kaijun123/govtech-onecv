@@ -3,6 +3,7 @@ package controller
 import (
 	"govtech-onecv/internal/db"
 	"govtech-onecv/internal/util"
+	"log"
 	"net/http"
 	"strings"
 
@@ -18,6 +19,8 @@ func NotificationHandler(c *gin.Context, database *db.Database) {
 	}
 	teacher := req.Teacher
 	notif := req.Notification
+	log.Println("teacher: ", teacher)
+	log.Println("notif: ", notif)
 
 	if notif == "" || teacher == "" {
 		c.JSON(http.StatusBadRequest, NewErrorResponse("invalid request body"))
@@ -26,11 +29,11 @@ func NotificationHandler(c *gin.Context, database *db.Database) {
 
 	// Get students registered under a teacher
 	var teacherSchema db.TeacherSchema
-	if result := database.DB.First(&teacherSchema); result.Error != nil {
+	if result := database.DB.First(&teacherSchema, "teacher=?", teacher); result.Error != nil {
 		c.JSON(http.StatusBadRequest, NewErrorResponse("Database error; cannot fetch data"))
 		return
 	}
-	// log.Println("teacherSchema: ", teacherSchema)
+	log.Println("teacherSchema: ", teacherSchema)
 
 	studentMap := make(map[string]bool)
 
@@ -48,11 +51,11 @@ func NotificationHandler(c *gin.Context, database *db.Database) {
 		}
 
 	}
-	// log.Println("studentMap: ", studentMap)
+	log.Println("studentMap: ", studentMap)
 
 	// Get the names specially mentioned using the @
 	words := strings.Split(notif, " ")
-	// log.Println("words: ", words)
+	log.Println("words: ", words)
 
 	for _, w := range words {
 		if strings.HasPrefix(w, "@") {
@@ -67,8 +70,8 @@ func NotificationHandler(c *gin.Context, database *db.Database) {
 					return
 				} else if studentSchema.Student != "" && !studentSchema.Suspend {
 					// student exists and is not suspended, add to map
-					// log.Println("trimmedWord: ", trimmedWord)
-					// log.Println("studentSchema: ", studentSchema)
+					log.Println("trimmedWord: ", trimmedWord)
+					log.Println("studentSchema: ", studentSchema)
 					studentMap[trimmedWord] = true
 				}
 			}

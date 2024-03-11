@@ -1,12 +1,17 @@
 # ==============================================================================
 # Docker support for server
 
-build:
+server-build:
 	@docker build -t onecv_server .
 
-run:
+server-run:
 	@docker run -p 8080:8080 onecv_server
 
+# ==============================================================================
+# Docker support for db
+
+db:
+	@docker run -t -p 5431:5432 --env-file=.env postgres:14
 
 # ==============================================================================
 # Docker-compose support

@@ -1,34 +1,23 @@
 package main
 
 import (
-	"fmt"
 	"govtech-onecv/internal/controller"
 	"govtech-onecv/internal/db"
-	"log"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 
-	fmt.Println("test")
-
 	database := &db.Database{}
 	database.Init()
 	database.AutoMigrate()
-	database.Seed()
+	// database.Seed()
 
 	r := gin.Default()
 
 	api := r.Group("/api")
 	{
-
-		api.GET("/db", func(c *gin.Context) {
-			student1 := db.StudentSchema{}
-			database.DB.Find(&student1)
-			log.Println("student1: ", student1)
-		})
-
 		api.GET("/health", func(c *gin.Context) {
 			controller.HealthController(c)
 		})

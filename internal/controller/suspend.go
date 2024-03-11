@@ -41,7 +41,7 @@ func SuspendStudentHandler(c *gin.Context, database *db.Database) {
 			c.JSON(http.StatusInternalServerError, NewErrorResponse("Database error; cannot write data"))
 			return
 		} else {
-			c.JSON(http.StatusNonAuthoritativeInfo, NewSuccessResponse(""))
+			c.JSON(http.StatusNoContent, NewSuccessResponse(""))
 			return
 		}
 	} else {

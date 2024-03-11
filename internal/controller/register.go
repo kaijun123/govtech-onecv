@@ -44,17 +44,20 @@ func RegisterStudentHandler(c *gin.Context, database *db.Database) {
 		// Update TeacherSchema
 		teacherSchema.Teacher = teacher
 		teacherSchema.Students = newStudents
+		log.Println("teacherSchema: ", teacherSchema)
 		if result := tx.Create(&teacherSchema); result.Error != nil {
 			tx.Rollback()
 			c.JSON(http.StatusInternalServerError, NewErrorResponse("Database error; cannot write data"))
 			return
 		}
+		log.Println("Successfully created teacher")
 
 		// Update StudentSchema
-		if status, errorResp := updateStudentSchema(tx, teacher, newStudents); status != http.StatusOK {
+		if status, errorResp := updateStudentSchema(tx, teacher, newStudents); status != http.StatusNoContent {
 			c.JSON(status, errorResp)
 			return
 		}
+		log.Println("Successfully updated student")
 
 	} else {
 		// Teacher in the database
@@ -76,14 +79,14 @@ func RegisterStudentHandler(c *gin.Context, database *db.Database) {
 		}
 
 		// Update the StudentSchema
-		if status, errorResp := updateStudentSchema(tx, teacher, newStudents); status != http.StatusOK {
+		if status, errorResp := updateStudentSchema(tx, teacher, newStudents); status != http.StatusNoContent {
 			c.JSON(status, errorResp)
 			return
 		}
 
 	}
 	tx.Commit()
-	c.JSON(http.StatusOK, NewSuccessResponse(""))
+	c.JSON(http.StatusNoContent, NewSuccessResponse(""))
 }
 
 // Update StudentSchema
@@ -91,6 +94,9 @@ func updateStudentSchema(tx *gorm.DB, teacher string, newStudents []string) (int
 	for _, s := range newStudents {
 		var studentSchema db.StudentSchema
 		if result := tx.Find(&studentSchema, "student=?", s); result.Error != nil {
+			log.Println("Database error; cannot fetch data")
+			log.Println(studentSchema)
+
 			tx.Rollback()
 			return http.StatusInternalServerError, NewErrorResponse("Database error; cannot fetch data")
 
@@ -113,5 +119,5 @@ func updateStudentSchema(tx *gorm.DB, teacher string, newStudents []string) (int
 			}
 		}
 	}
-	return http.StatusOK, ErrorResponse{}
+	return http.StatusNoContent, ErrorResponse{}
 }

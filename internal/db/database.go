@@ -36,13 +36,23 @@ func (d *Database) Init() {
 	}
 
 	dsn := "host=db" + " user=" + pg_user + " password=" + pg_password + " dbname=" + pg_db + " port=" + pg_port + " sslmode=disable TimeZone=Asia/Shanghai"
-
+	log.Println("dsn: ", dsn)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatalln(err)
 	}
 	d.DB = db
 }
+
+// func (d *Database) InitTest(host string, pg_user string, pg_password string, pg_db, pg_port string) {
+// 	dsn := "host=" + host + " user=" + pg_user + " password=" + pg_password + " dbname=" + pg_db + " port=" + pg_port + " sslmode=disable TimeZone=Asia/Shanghai"
+// 	log.Println("dsn: ", dsn)
+// 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+// 	if err != nil {
+// 		log.Fatalln(err)
+// 	}
+// 	d.DB = db
+// }
 
 func (d *Database) AutoMigrate() {
 	d.DB.AutoMigrate(&TeacherSchema{})
